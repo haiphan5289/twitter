@@ -11,10 +11,13 @@ import SnapKit
 import TRON
 import SwiftyJSON
 
+}
+
 class HomeController: UIViewController {
 
     var collect: UICollectionView!
     var arUsersFinal: [User] = [User]()
+    var arTweetFinal: [Tweet] = [Tweet]()
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
@@ -23,58 +26,97 @@ class HomeController: UIViewController {
     func setupViews(){
         self.setupNavigation()
         setupCollection()
-        fecthHomeFeed()
+        callAPIFetchHome()
         
     }
     
-    //import Tron library
-    //truyển url vào tron.init
-    //khỏi tạo tron
-    let tron = TRON.init(baseURL: "http://www.json-generator.com/api/json/get/cgfvZaotiW?indent=2")
-    
-    //tạo biến Json để hứng dữ liệu API trả về
-    //Biến thành congnf
-    class Home: JSONDecodable {
-        //tạo biếng mảng user để truyền giái trị
-        var arrayUsers: [User] = [User]()
-        required init(json: JSON) throws {
-            var arrtemp = [User]()
-            //tạo 1 biến để hứng mảng user trong json
-            var ar = json["user"].array
-            for i in ar! {
-                let name = i["name"].stringValue
-                let username = i["username"].stringValue
-                let bio = i["bio"].stringValue
-                let imgStr = i["profileIMGUrl"].stringValue
-                let user: User = User(name: name, username: username, bioTextView: bio, profileIMG: imgStr)
-                arrtemp.append(user)
+    func callAPIFetchHome(){
+        //        fecthHomeFeed()
+        //gọi hàm fetchhomeFeed ở class Service.
+        //Hàm này sẽ trả về 1 mảng User.
+        //arUsersFinal sẽ hứng giái trị mảng này.
+        //        Service.share.fetchHomeFeed { (users) -> [User] in
+        //            self.arUsersFinal = users
+        //            DispatchQueue.main.async {
+        //                self.collect.reloadData()
+        //            }
+        //            return users
+        //        }
+        let lb = UILabel()
+        lb.text = "Đã xay ra lôi"
+        lb.font = UIFont.boldSystemFont(ofSize: 40)
+        lb.textAlignment = .center
+        lb.isHidden = true
+        self.view.addSubview(lb)
+        
+        lb.snp.makeConstraints { (make) in
+            make.left.top.right.bottom.equalToSuperview()
+        }
+        
+        Service.share.fetchHomeFeed { (users, tweets, err) in
+            //Nếu api bị lỗi thi chạy hàm này
+            if err != nil {
+                lb.isHidden = false
+                print("Lỗi", err)
+                return
             }
-            self.arrayUsers = arrtemp
-        }
-    }
-    
-    //biến thất bại
-    class JSonErr: JSONDecodable {
-        required init(json: JSON) throws {
-            print("error")
-        }
-    }
-    
-    fileprivate func fecthHomeFeed(){
-        //tạo 1 biên request với suceess = Home, failure = JSonerr
-        let request: APIRequest<Home,JSonErr> = tron.swiftyJSON.request("")
-        request.perform(withSuccess: { (home) in
-            //láy giái trị mảng User dể truyền vào mảng của CollectionView
-            self.arUsersFinal = home.arrayUsers
-            print(self.arUsersFinal.count)
+            guard let users = users, let tweets = tweets else { return }
+            self.arUsersFinal = users
+            self.arTweetFinal = tweets
             DispatchQueue.main.async {
                 self.collect.reloadData()
             }
-            
-        }) { (err) in
-            print("err", err.localizedDescription)
         }
     }
+//
+//    //import Tron library
+//    //truyển url vào tron.init
+//    //khỏi tạo tron
+//    let tron = TRON.init(baseURL: "http://www.json-generator.com/api/json/get/cgfvZaotiW?indent=2")
+//
+//    //tạo biến Json để hứng dữ liệu API trả về
+//    //Biến thành congnf
+//    class Home: JSONDecodable {
+//        //tạo biếng mảng user để truyền giái trị
+//        var arrayUsers: [User] = [User]()
+//        required init(json: JSON) throws {
+//            var arrtemp = [User]()
+//            //tạo 1 biến để hứng mảng user trong json
+//            var ar = json["user"].array
+//            for i in ar! {
+//                let name = i["name"].stringValue
+//                let username = i["username"].stringValue
+//                let bio = i["bio"].stringValue
+//                let imgStr = i["profileIMGUrl"].stringValue
+//                let user: User = User(name: name, username: username, bioTextView: bio, profileIMG: imgStr)
+//                arrtemp.append(user)
+//            }
+//            self.arrayUsers = arrtemp
+//        }
+//    }
+//
+//    //biến thất bại
+//    class JSonErr: JSONDecodable {
+//        required init(json: JSON) throws {
+//            print("error")
+//        }
+//    }
+//
+//    fileprivate func fecthHomeFeed(){
+//        //tạo 1 biên request với suceess = Home, failure = JSonerr
+//        let request: APIRequest<Home,JSonErr> = tron.swiftyJSON.request("")
+//        request.perform(withSuccess: { (home) in
+//            //láy giái trị mảng User dể truyền vào mảng của CollectionView
+//            self.arUsersFinal = home.arrayUsers
+//            print(self.arUsersFinal.count)
+//            DispatchQueue.main.async {
+//                self.collect.reloadData()
+//            }
+//
+//        }) { (err) in
+//            print("err", err.localizedDescription)
+//        }
+//    }
     
 
     
@@ -97,45 +139,45 @@ class HomeController: UIViewController {
         
     }
     
-    func createArrayDemo() -> [User]{
-        var ar: [User] = [User]()
-        let a = User(name: "Hải Phan", username: "@Mot",
-                        bioTextView: "Bộ phận hỗ trợ Vé Máy Bay sẽ tiếp nhận và liên hệ lại trong thời gian sớm nhất, anh vui lòng kiểm tra thông tin trên và phản hồi email này nếu cần thay đổi yêu cầu",
-                        profileIMG: "profile" )
-        let b = User(name: "Hải Phan", username: "@Mot",
-                        bioTextView: "Bộ phận hỗ trợ Vé Máy Bay sẽ tiếp nhận và liên hệ lại trong thời gian sớm nhất, anh vui lòng kiểm tra thông tin trên và phản hồi email này nếu cần thay đổi yêu cầu",
-                        profileIMG: "profile" )
-        let c = User(name: "Hải Phan", username: "@Mot",
-                        bioTextView: """
-            Tạo ra LeadInstrument phù hợp với Equatable. Nó có chứa một thuộc tính là brand và một phương thức tune().
-            Overide tune() trong Keyboard là "Keyboard standard tuning."
-            Overide tune() trong Guitar là "Guitar standard tuning.
-            Bộ phận hỗ trợ Vé Máy Bay sẽ tiếp nhận và liên hệ lại trong thời gian sớm nhất, anh vui lòng kiểm tra thông tin trên và phản hồi email này nếu cần thay đổi yêu cầu
-            """,
-                        profileIMG: "profile" )
-        ar.append(a)
-        ar.append(b)
-        ar.append(c)
-        return ar
-        
-    }
-    func createArrayTweet() -> [Tweet]{
-        var ar: [Tweet] = [Tweet]()
-        let c = User(name: "Hải Phan", username: "@Mot",
-                     bioTextView: "Bộ phận hỗ trợ Vé Máy Bay sẽ tiếp nhận và liên hệ lại trong thời gian sớm nhất, anh vui lòng kiểm tra thông tin trên và phản hồi email này nếu cần thay đổi yêu cầu",
-                     profileIMG: "profile" )
-        let d = User(name: "Hải Phan", username: "@Mot",
-                     bioTextView: "Bộ phận hỗ trợ Vé Máy Bay sẽ tiếp nhận và liên hệ lại trong thời gian sớm nhất, anh vui lòng kiểm tra thông tin trên và phản hồi email này nếu cần thay đổi yêu cầu",
-                     profileIMG: "profile" )
-        var a = Tweet(user: c,
-                      message: "Bộ phận hỗ trợ Vé Máy Bay sẽ tiếp nhận và liên hệ lại trong thời gian sớm nhất, anh vui lòng kiểm tra thông tin trên và phản hồi email này nếu cần thay đổi yêu cầu")
-        var b = Tweet(user: d,
-                      message: "Bộ phận hỗ trợ Vé Máy Bay sẽ tiếp nhận và liên hệ lại trong thời gian sớm nhất, anh vui lòng kiểm tra thông tin trên và phản hồi email này nếu cần thay đổi yêu cầu")
-        
-        ar.append(a)
-        ar.append(b)
-        return ar
-    }
+//    func createArrayDemo() -> [User]{
+//        var ar: [User] = [User]()
+//        let a = User(name: "Hải Phan", username: "@Mot",
+//                        bioTextView: "Bộ phận hỗ trợ Vé Máy Bay sẽ tiếp nhận và liên hệ lại trong thời gian sớm nhất, anh vui lòng kiểm tra thông tin trên và phản hồi email này nếu cần thay đổi yêu cầu",
+//                        profileIMG: "profile" )
+//        let b = User(name: "Hải Phan", username: "@Mot",
+//                        bioTextView: "Bộ phận hỗ trợ Vé Máy Bay sẽ tiếp nhận và liên hệ lại trong thời gian sớm nhất, anh vui lòng kiểm tra thông tin trên và phản hồi email này nếu cần thay đổi yêu cầu",
+//                        profileIMG: "profile" )
+//        let c = User(name: "Hải Phan", username: "@Mot",
+//                        bioTextView: """
+//            Tạo ra LeadInstrument phù hợp với Equatable. Nó có chứa một thuộc tính là brand và một phương thức tune().
+//            Overide tune() trong Keyboard là "Keyboard standard tuning."
+//            Overide tune() trong Guitar là "Guitar standard tuning.
+//            Bộ phận hỗ trợ Vé Máy Bay sẽ tiếp nhận và liên hệ lại trong thời gian sớm nhất, anh vui lòng kiểm tra thông tin trên và phản hồi email này nếu cần thay đổi yêu cầu
+//            """,
+//                        profileIMG: "profile" )
+//        ar.append(a)
+//        ar.append(b)
+//        ar.append(c)
+//        return ar
+//
+//    }
+//    func createArrayTweet() -> [Tweet]{
+//        var ar: [Tweet] = [Tweet]()
+//        let c = User(name: "Hải Phan", username: "@Mot",
+//                     bioTextView: "Bộ phận hỗ trợ Vé Máy Bay sẽ tiếp nhận và liên hệ lại trong thời gian sớm nhất, anh vui lòng kiểm tra thông tin trên và phản hồi email này nếu cần thay đổi yêu cầu",
+//                     profileIMG: "profile" )
+//        let d = User(name: "Hải Phan", username: "@Mot",
+//                     bioTextView: "Bộ phận hỗ trợ Vé Máy Bay sẽ tiếp nhận và liên hệ lại trong thời gian sớm nhất, anh vui lòng kiểm tra thông tin trên và phản hồi email này nếu cần thay đổi yêu cầu",
+//                     profileIMG: "profile" )
+//        var a = Tweet(user: c,
+//                      message: "Bộ phận hỗ trợ Vé Máy Bay sẽ tiếp nhận và liên hệ lại trong thời gian sớm nhất, anh vui lòng kiểm tra thông tin trên và phản hồi email này nếu cần thay đổi yêu cầu")
+//        var b = Tweet(user: d,
+//                      message: "Bộ phận hỗ trợ Vé Máy Bay sẽ tiếp nhận và liên hệ lại trong thời gian sớm nhất, anh vui lòng kiểm tra thông tin trên và phản hồi email này nếu cần thay đổi yêu cầu")
+//        
+//        ar.append(a)
+//        ar.append(b)
+//        return ar
+//    }
     
     func EstimateSizeForText(text: String) -> CGRect{
         let size = CGSize(width: self.view.frame.width - 12 - 50 - 8, height: 1000)
@@ -153,13 +195,13 @@ extension HomeController: UICollectionViewDelegate, UICollectionViewDataSource, 
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if section == 1{
-            return 2
+            return self.arTweetFinal.count
         }
         return self.arUsersFinal.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        var arrayTweet = self.createArrayTweet()
+//        var arrayTweet = self.createArrayTweet()
 //        print(self.arUsersFinal[0])
         if indexPath.section == 0 {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! HomeCell
@@ -168,13 +210,14 @@ extension HomeController: UICollectionViewDelegate, UICollectionViewDataSource, 
         }
         else{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "twittercell", for: indexPath) as! TwitterCell
-            cell.mess = arrayTweet[indexPath.row]
+//            cell.mess = arrayTweet[indexPath.row]
+            cell.mess = self.arTweetFinal[indexPath.row]
             return cell
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        var arrayDemo = self.createArrayDemo()
+        var arrayDemo = self.arUsersFinal
         let height = EstimateSizeForText(text: arrayDemo[indexPath.row].bioTextView).height
         return CGSize(width: self.view.bounds.width, height: height + 66 )
     }

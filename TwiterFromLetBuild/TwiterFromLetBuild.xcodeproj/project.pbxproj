@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		93A6C0D623200A880000674B /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A6C0D523200A880000674B /* Service.swift */; };
 		93F8D125231963BE00413246 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F8D124231963BE00413246 /* AppDelegate.swift */; };
 		93F8D127231963BE00413246 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F8D126231963BE00413246 /* ViewController.swift */; };
 		93F8D12A231963BE00413246 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93F8D128231963BE00413246 /* Main.storyboard */; };
@@ -27,6 +28,7 @@
 /* Begin PBXFileReference section */
 		4A5AA3A42F8375E48D3B5047 /* Pods-TwiterFromLetBuild.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwiterFromLetBuild.release.xcconfig"; path = "Target Support Files/Pods-TwiterFromLetBuild/Pods-TwiterFromLetBuild.release.xcconfig"; sourceTree = "<group>"; };
 		55901CCCD977C47E4DE354D5 /* Pods_TwiterFromLetBuild.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TwiterFromLetBuild.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		93A6C0D523200A880000674B /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		93F8D121231963BE00413246 /* TwiterFromLetBuild.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwiterFromLetBuild.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93F8D124231963BE00413246 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		93F8D126231963BE00413246 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 				93F8D13A231964A600413246 /* ColorBackGround.swift */,
 				93F8D13C2319675D00413246 /* Extension.swift */,
 				93F8D1432319712200413246 /* User.swift */,
+				93A6C0D523200A880000674B /* Service.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -259,6 +262,7 @@
 				93F8D141231969A200413246 /* HomeCell.swift in Sources */,
 				93F8D14A231B7A1900413246 /* TwitterCell.swift in Sources */,
 				93F8D127231963BE00413246 /* ViewController.swift in Sources */,
+				93A6C0D623200A880000674B /* Service.swift in Sources */,
 				93F8D125231963BE00413246 /* AppDelegate.swift in Sources */,
 				93F8D1442319712200413246 /* User.swift in Sources */,
 				93F8D138231963E900413246 /* HomeController.swift in Sources */,
@@ -414,6 +418,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7VA7N3EEEN;
 				INFOPLIST_FILE = TwiterFromLetBuild/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -433,6 +438,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7VA7N3EEEN;
 				INFOPLIST_FILE = TwiterFromLetBuild/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

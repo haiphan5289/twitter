@@ -17,6 +17,9 @@ class TwitterCell: BaseCell {
             let username = mess.user.username + "\n"
             attributeString.append(NSMutableAttributedString(string: username,
                                                              attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15), NSAttributedString.Key.foregroundColor: ColorBR.share.ColorBRSetup(type: .TextCellUserName)]))
+            let bio = mess.user.bioTextView + "\n"
+            attributeString.append(NSMutableAttributedString(string: bio,
+                                                             attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15), NSAttributedString.Key.foregroundColor: ColorBR.share.ColorBRSetup(type: .TextCellUserName)]))
             let paraStyle = NSMutableParagraphStyle()
             paraStyle.lineSpacing = 4
             let range = NSMakeRange(0, attributeString.string.count)
@@ -25,6 +28,7 @@ class TwitterCell: BaseCell {
                                                              attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16)]))
             
             bioTextView.attributedText = attributeString
+            profileIMG.loadIMG(text: mess.user.profileIMG)
         }
     }
     var profileIMG: UIImageView!
@@ -109,7 +113,7 @@ class TwitterCell: BaseCell {
     func setupProfileIMG(){
         profileIMG = UIImageView()
         profileIMG.image = UIImage(named: "profile")
-        profileIMG.contentMode = .scaleAspectFit
+        profileIMG.contentMode = .scaleAspectFill
         profileIMG.layer.cornerRadius = 5
         profileIMG.clipsToBounds = true
         self.addSubview(profileIMG)
